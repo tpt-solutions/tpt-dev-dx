@@ -1,0 +1,40 @@
+[workspace]
+resolver = "2"
+members = ["crates/*"]
+
+[workspace.package]
+version = "0.1.0"
+edition = "2021"
+rust-version = "1.75"
+license = "MIT OR Apache-2.0"
+repository = "https://github.com/thirtyfiveparts/tpt-dev-dx"
+authors = ["ThirtyFiveParts"]
+homepage = "https://github.com/thirtyfiveparts/tpt-dev-dx"
+
+[workspace.dependencies]
+# proc-macro support
+proc-macro2 = "1"
+quote = "1"
+syn = { version = "2", features = ["full"] }
+
+# serialisation
+serde = { version = "1", features = ["derive"] }
+serde_json = "1"
+serde_yaml = "0.9"
+
+# randomness
+rand = "0.8"
+
+# CLI / TUI
+clap = { version = "4", features = ["derive"] }
+ratatui = "0.28"
+crossterm = "0.28"
+
+# filesystem traversal
+ignore = "0.4"
+
+# formatting
+humansize = "2"
+
+# error handling
+anyhow = "1"

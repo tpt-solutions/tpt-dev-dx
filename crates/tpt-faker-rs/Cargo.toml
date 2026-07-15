@@ -1,0 +1,23 @@
+[package]
+name = "tpt-faker-rs"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Strongly-typed, realistic mock data generation — Luhn cards, valid dates, locale-aware names, and more"
+keywords = ["testing", "fake", "mock", "data", "faker"]
+categories = ["development-tools::testing"]
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+tpt-faker-rs-derive = { path = "../tpt-faker-rs-derive", version = "0.1.0" }
+rand = { workspace = true }
+serde = { workspace = true, optional = true }
+
+[features]
+default = []
+serde = ["dep:serde"]

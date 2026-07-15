@@ -1,0 +1,23 @@
+[package]
+name = "tpt-temp-fs"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Ephemeral, isolated file-system fixtures for integration tests — auto-cleaned on drop, even on panic"
+keywords = ["testing", "tempdir", "filesystem", "fixtures", "test-utils"]
+categories = ["development-tools::testing", "filesystem"]
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+serde = { workspace = true, optional = true }
+serde_json = { workspace = true, optional = true }
+serde_yaml = { workspace = true, optional = true }
+
+[features]
+default = ["scaffold"]
+scaffold = ["dep:serde", "dep:serde_json", "dep:serde_yaml"]

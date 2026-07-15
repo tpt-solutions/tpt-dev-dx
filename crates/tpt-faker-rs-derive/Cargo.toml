@@ -1,0 +1,22 @@
+[package]
+name = "tpt-faker-rs-derive"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Proc-macro internals for tpt-faker-rs — do not use directly"
+keywords = ["testing", "fake", "mock", "proc-macro", "derive"]
+categories = ["development-tools::testing"]
+readme = "README.md"
+exclude = [".github"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = { workspace = true }
+quote = { workspace = true }
+syn = { workspace = true }

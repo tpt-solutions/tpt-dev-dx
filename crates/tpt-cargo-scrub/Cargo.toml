@@ -1,0 +1,28 @@
+[package]
+name = "tpt-cargo-scrub"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Blazing-fast CLI/TUI tool to find, analyze, and clean Rust target/ directories across your entire machine"
+keywords = ["cargo", "clean", "tui", "disk-space", "cli"]
+categories = ["command-line-utilities", "development-tools"]
+readme = "README.md"
+exclude = [".github"]
+
+[[bin]]
+name = "tpt-cargo-scrub"
+path = "src/main.rs"
+
+[dependencies]
+clap = { workspace = true }
+ratatui = { workspace = true }
+crossterm = { workspace = true }
+ignore = { workspace = true }
+serde_json = { workspace = true }
+humansize = { workspace = true }
+anyhow = { workspace = true }
+serde = { workspace = true, features = ["derive"] }

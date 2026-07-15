@@ -1,0 +1,21 @@
+[package]
+name = "tpt-env-mocker"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Safe, isolated environment variable mocking for async tests — prevents race conditions via a global Mutex"
+keywords = ["testing", "env", "mock", "async", "test-utils"]
+categories = ["development-tools::testing"]
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+tpt-env-mocker-macros = { path = "../tpt-env-mocker-macros", version = "0.1.0", optional = true }
+
+[features]
+default = ["macros"]
+macros = ["dep:tpt-env-mocker-macros"]

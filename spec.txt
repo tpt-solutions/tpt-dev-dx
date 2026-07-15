@@ -1,0 +1,22 @@
+Repo 2: tpt-dev-dx (Developer Experience & Testing)
+Vision: Eliminating the boilerplate and friction in Rust backend development and testing.
+Crate 1: tpt-env-mocker
+Purpose: Safe, isolated environment variable mocking for async tests.
+Problem Solved: std::env::set_var is global. If two async tests run in parallel and change the same env var, they race and fail.
+Design Details: Uses a global Mutex to lock the environment during a test scope, OR uses thread-local storage interception. Provides a #[tpt_env(DB_URL="postgres://...")] proc-macro attribute for easy test setup.
+Crate 2: tpt-cargo-scrub
+Purpose: A blazing-fast CLI tool to find, analyze, and clean Rust target/ directories across an entire machine.
+Problem Solved: Rust developers constantly run out of SSD space due to fragmented target/ folders. Existing tools only clean the current directory.
+Design Details: Uses ignore crate for fast, .gitignore-aware directory traversal. Uses ratatui to render an interactive TUI showing a tree-map of disk usage. Allows selective deletion of old vs. recent builds.
+Crate 3: tpt-faker-rs
+Purpose: Strongly-typed, realistic mock data generation.
+Problem Solved: Testing requires realistic data. Existing Rust "fake" crates often generate random strings that fail database constraints or UI validation.
+Design Details: Uses serde to derive a Fake trait. Generates context-aware data (e.g., valid credit card numbers using the Luhn algorithm, realistic names based on locale, valid ISO dates).
+Crate 4: tpt-temp-fs
+Purpose: Ephemeral, isolated file-system fixtures for integration tests.
+Problem Solved: Tests that read/write files often clash if run in parallel, or leave garbage on the developer's machine if the test panics.
+Design Details: Creates a unique temporary directory in std::env::temp_dir(). Implements Drop to guarantee cleanup, even on panic. Provides helper methods to quickly scaffold a fake directory tree from a YAML/JSON definition.
+Crate 5: tpt-snapshot-lite
+Purpose: A lightweight, zero-dependency snapshot testing library.
+Problem Solved: The standard insta crate is amazing but heavy. For simple CLI tools or small libraries, developers want snapshot testing without pulling in a massive dependency tree.
+Design Details: Compares Debug or Display output against .snap files. Uses inline snapshots (updating the source code directly) or external files. Focuses on minimal compile-time overhead.

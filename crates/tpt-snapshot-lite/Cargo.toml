@@ -1,0 +1,17 @@
+[package]
+name = "tpt-snapshot-lite"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Lightweight, zero-dependency snapshot testing — compare Debug/Display output against .snap files"
+keywords = ["testing", "snapshot", "assert", "test-utils", "tdd"]
+categories = ["development-tools::testing"]
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+# intentionally empty — zero runtime dependencies
