@@ -2,8 +2,8 @@ mod cli;
 mod scan;
 mod tui;
 
-use cli::Args;
 use clap::Parser;
+use cli::Args;
 use std::io::IsTerminal;
 
 fn main() -> anyhow::Result<()> {
@@ -41,7 +41,11 @@ fn print_summary(entries: &[scan::TargetEntry], dry_run: bool) {
         format_size(total, BINARY)
     );
     for e in entries {
-        println!("  {} — {}", e.path.display(), format_size(e.size_bytes, BINARY));
+        println!(
+            "  {} — {}",
+            e.path.display(),
+            format_size(e.size_bytes, BINARY)
+        );
     }
     if dry_run {
         println!("\n[dry-run] No files deleted.");

@@ -10,6 +10,7 @@ homepage.workspace = true
 description = "Ephemeral, isolated file-system fixtures for integration tests — auto-cleaned on drop, even on panic"
 keywords = ["testing", "tempdir", "filesystem", "fixtures", "test-utils"]
 categories = ["development-tools::testing", "filesystem"]
+documentation = "https://docs.rs/tpt-temp-fs"
 readme = "README.md"
 exclude = [".github"]
 

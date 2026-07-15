@@ -42,19 +42,19 @@ pub fn find_targets(args: &Args) -> anyhow::Result<Vec<TargetEntry>> {
             continue;
         }
 
-        if entry.file_type().map(|t| t.is_dir()).unwrap_or(false)
-            && entry.file_name() == "target"
-        {
+        if entry.file_type().map(|t| t.is_dir()).unwrap_or(false) && entry.file_name() == "target" {
             // Check it's a Cargo target dir by looking for a `.rustc_info.json`
             // or any `.d` files — a heuristic to avoid false positives.
             let is_cargo_target = path.join(".rustc_info.json").exists()
                 || path.join("CACHEDIR.TAG").exists()
                 || fs::read_dir(&path)
-                    .map(|mut d| d.any(|e| {
-                        e.ok()
-                            .and_then(|e| e.path().extension().map(|x| x == "d"))
-                            .unwrap_or(false)
-                    }))
+                    .map(|mut d| {
+                        d.any(|e| {
+                            e.ok()
+                                .and_then(|e| e.path().extension().map(|x| x == "d"))
+                                .unwrap_or(false)
+                        })
+                    })
                     .unwrap_or(false);
 
             if !is_cargo_target {
@@ -71,7 +71,11 @@ pub fn find_targets(args: &Args) -> anyhow::Result<Vec<TargetEntry>> {
             }
 
             let last_modified = format_time(last_mod);
-            targets.push(TargetEntry { path: path.clone(), size_bytes: size, last_modified });
+            targets.push(TargetEntry {
+                path: path.clone(),
+                size_bytes: size,
+                last_modified,
+            });
             skip_prefixes.push(path);
         }
     }
@@ -110,7 +114,7 @@ fn dir_stats(dir: &std::path::Path) -> (u64, SystemTime) {
     (total, newest)
 }
 
-fn format_time(t: SystemTime) -> String {
+pub(crate) fn format_time(t: SystemTime) -> String {
     // Format as a simple ISO 8601 timestamp without external deps.
     match t.duration_since(SystemTime::UNIX_EPOCH) {
         Ok(d) => {
@@ -128,7 +132,7 @@ fn format_time(t: SystemTime) -> String {
     }
 }
 
-fn days_to_ymd(days: u64) -> (u64, u64, u64) {
+pub(crate) fn days_to_ymd(days: u64) -> (u64, u64, u64) {
     // Gregorian calendar calculation (no external deps).
     let z = days + 719468;
     let era = z / 146097;
@@ -146,4 +150,84 @@ fn days_to_ymd(days: u64) -> (u64, u64, u64) {
 pub fn delete_target(entry: &TargetEntry) -> anyhow::Result<()> {
     fs::remove_dir_all(&entry.path)?;
     Ok(())
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{days_to_ymd, format_time};
+    use std::time::{Duration, UNIX_EPOCH};
+
+    // ── days_to_ymd ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn epoch_is_1970_jan_01() {
+        assert_eq!(days_to_ymd(0), (1970, 1, 1));
+    }
+
+    #[test]
+    fn one_day_after_epoch() {
+        assert_eq!(days_to_ymd(1), (1970, 1, 2));
+    }
+
+    #[test]
+    fn year_boundary_1970_dec_31() {
+        assert_eq!(days_to_ymd(364), (1970, 12, 31));
+    }
+
+    #[test]
+    fn year_boundary_1971_jan_01() {
+        assert_eq!(days_to_ymd(365), (1971, 1, 1));
+    }
+
+    #[test]
+    fn known_date_2000_jan_01() {
+        assert_eq!(days_to_ymd(10957), (2000, 1, 1));
+    }
+
+    #[test]
+    fn leap_year_2000_feb_29() {
+        assert_eq!(days_to_ymd(11016), (2000, 2, 29));
+    }
+
+    #[test]
+    fn non_leap_century_2100_feb_28() {
+        assert_eq!(days_to_ymd(47540), (2100, 2, 28));
+    }
+
+    #[test]
+    fn non_leap_century_2100_mar_01() {
+        assert_eq!(days_to_ymd(47541), (2100, 3, 1));
+    }
+
+    #[test]
+    fn leap_year_2024_feb_29() {
+        assert_eq!(days_to_ymd(19782), (2024, 2, 29));
+    }
+
+    // ── format_time ──────────────────────────────────────────────────────────
+
+    #[test]
+    fn format_epoch() {
+        assert_eq!(format_time(UNIX_EPOCH), "1970-01-01T00:00:00Z");
+    }
+
+    #[test]
+    fn format_one_day_after_epoch() {
+        let t = UNIX_EPOCH + Duration::from_secs(86400);
+        assert_eq!(format_time(t), "1970-01-02T00:00:00Z");
+    }
+
+    #[test]
+    fn format_with_time_components() {
+        // 1970-01-01T01:02:03Z = 3723 seconds
+        let t = UNIX_EPOCH + Duration::from_secs(3723);
+        assert_eq!(format_time(t), "1970-01-01T01:02:03Z");
+    }
+
+    #[test]
+    fn format_known_timestamp() {
+        // 2024-01-15T00:00:00Z = 1705276800s
+        let t = UNIX_EPOCH + Duration::from_secs(1_705_276_800);
+        assert_eq!(format_time(t), "2024-01-15T00:00:00Z");
+    }
 }

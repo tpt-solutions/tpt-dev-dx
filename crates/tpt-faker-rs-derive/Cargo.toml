@@ -10,6 +10,7 @@ homepage.workspace = true
 description = "Proc-macro internals for tpt-faker-rs — do not use directly"
 keywords = ["testing", "fake", "mock", "proc-macro", "derive"]
 categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-faker-rs-derive"
 readme = "README.md"
 exclude = [".github"]
 

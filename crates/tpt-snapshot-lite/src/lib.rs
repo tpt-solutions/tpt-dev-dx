@@ -11,7 +11,10 @@ enum Mode {
 }
 
 fn current_mode() -> Mode {
-    if std::env::var("UPDATE_SNAPSHOTS").map(|v| !v.is_empty()).unwrap_or(false) {
+    if std::env::var("UPDATE_SNAPSHOTS")
+        .map(|v| !v.is_empty())
+        .unwrap_or(false)
+    {
         Mode::Update
     } else {
         Mode::Assert
@@ -153,21 +156,29 @@ mod tests {
 
     // Minimal inline tempdir so we have zero external test deps.
     mod tempfile_compat {
-        use std::{fs, path::PathBuf, sync::atomic::{AtomicU64, Ordering}};
+        use std::{
+            fs,
+            path::PathBuf,
+            sync::atomic::{AtomicU64, Ordering},
+        };
         static COUNTER: AtomicU64 = AtomicU64::new(0);
         pub struct Dir(PathBuf);
         impl Dir {
             pub fn new() -> Self {
                 let n = COUNTER.fetch_add(1, Ordering::SeqCst);
-                let p = std::env::temp_dir()
-                    .join(format!("snap-test-{}-{}", std::process::id(), n));
+                let p =
+                    std::env::temp_dir().join(format!("snap-test-{}-{}", std::process::id(), n));
                 fs::create_dir_all(&p).unwrap();
                 Dir(p)
             }
-            pub fn path(&self) -> &std::path::Path { &self.0 }
+            pub fn path(&self) -> &std::path::Path {
+                &self.0
+            }
         }
         impl Drop for Dir {
-            fn drop(&mut self) { let _ = fs::remove_dir_all(&self.0); }
+            fn drop(&mut self) {
+                let _ = fs::remove_dir_all(&self.0);
+            }
         }
     }
 
@@ -198,10 +209,15 @@ mod tests {
         let result = std::panic::catch_unwind(|| snap.assert_display(&"new"));
         assert!(result.is_err(), "should panic on mismatch");
         let msg = result.unwrap_err();
-        let msg_str = msg.downcast_ref::<String>().map(|s| s.as_str())
+        let msg_str = msg
+            .downcast_ref::<String>()
+            .map(|s| s.as_str())
             .or_else(|| msg.downcast_ref::<&str>().copied())
             .unwrap_or("");
-        assert!(msg_str.contains("mismatch"), "panic message should contain 'mismatch': {msg_str}");
+        assert!(
+            msg_str.contains("mismatch"),
+            "panic message should contain 'mismatch': {msg_str}"
+        );
     }
 
     #[test]

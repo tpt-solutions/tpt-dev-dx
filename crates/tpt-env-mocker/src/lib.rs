@@ -64,7 +64,9 @@ impl MockEnv {
     pub fn lock(self) -> EnvGuard {
         // If a previous test panicked while holding the lock, recover the
         // inner guard so subsequent tests still run.
-        let lock = ENV_MUTEX.lock().unwrap_or_else(|poisoned| poisoned.into_inner());
+        let lock = ENV_MUTEX
+            .lock()
+            .unwrap_or_else(|poisoned| poisoned.into_inner());
 
         // Snapshot originals before applying ops.
         let original_values: Vec<(String, Option<String>)> = self
@@ -93,7 +95,10 @@ impl MockEnv {
             }
         }
 
-        EnvGuard { _lock: lock, original_values }
+        EnvGuard {
+            _lock: lock,
+            original_values,
+        }
     }
 
     /// Recover from a poisoned global mutex.

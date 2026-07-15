@@ -10,6 +10,7 @@ homepage.workspace = true
 description = "Strongly-typed, realistic mock data generation — Luhn cards, valid dates, locale-aware names, and more"
 keywords = ["testing", "fake", "mock", "data", "faker"]
 categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-faker-rs"
 readme = "README.md"
 exclude = [".github"]
 

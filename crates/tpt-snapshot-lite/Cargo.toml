@@ -10,6 +10,7 @@ homepage.workspace = true
 description = "Lightweight, zero-dependency snapshot testing — compare Debug/Display output against .snap files"
 keywords = ["testing", "snapshot", "assert", "test-utils", "tdd"]
 categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-snapshot-lite"
 readme = "README.md"
 exclude = [".github"]
 

@@ -10,6 +10,7 @@ homepage.workspace = true
 description = "Proc-macro internals for tpt-env-mocker — do not use directly"
 keywords = ["testing", "env", "macros", "proc-macro"]
 categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-env-mocker-macros"
 readme = "README.md"
 exclude = [".github"]
 

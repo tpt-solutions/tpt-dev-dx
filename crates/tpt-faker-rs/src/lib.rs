@@ -21,19 +21,17 @@ pub mod gen {
     // ── Names ────────────────────────────────────────────────────────────────
 
     static FIRST_NAMES: &[&str] = &[
-        "Alice", "Bob", "Carol", "David", "Eva", "Frank", "Grace", "Henry",
-        "Iris", "Jack", "Karen", "Leo", "Mia", "Nathan", "Olivia", "Paul",
-        "Quinn", "Rachel", "Sam", "Tara", "Uma", "Victor", "Wendy", "Xander",
-        "Yara", "Zoe", "Liam", "Emma", "Noah", "Ava", "Oliver", "Sofia",
-        "Elijah", "Mila", "William", "Aria", "James", "Scarlett", "Lucas", "Luna",
+        "Alice", "Bob", "Carol", "David", "Eva", "Frank", "Grace", "Henry", "Iris", "Jack",
+        "Karen", "Leo", "Mia", "Nathan", "Olivia", "Paul", "Quinn", "Rachel", "Sam", "Tara", "Uma",
+        "Victor", "Wendy", "Xander", "Yara", "Zoe", "Liam", "Emma", "Noah", "Ava", "Oliver",
+        "Sofia", "Elijah", "Mila", "William", "Aria", "James", "Scarlett", "Lucas", "Luna",
     ];
 
     static LAST_NAMES: &[&str] = &[
-        "Smith", "Jones", "Williams", "Brown", "Taylor", "Davies", "Evans",
-        "Wilson", "Thomas", "Roberts", "Johnson", "Walker", "Wright", "Thompson",
-        "Robinson", "White", "Hughes", "Edwards", "Green", "Hall", "Lewis",
-        "Harris", "Clarke", "Patel", "Jackson", "Wood", "Turner", "Martin",
-        "Cooper", "Hill", "Ward", "Morris", "Moore", "Clark", "Lee", "King",
+        "Smith", "Jones", "Williams", "Brown", "Taylor", "Davies", "Evans", "Wilson", "Thomas",
+        "Roberts", "Johnson", "Walker", "Wright", "Thompson", "Robinson", "White", "Hughes",
+        "Edwards", "Green", "Hall", "Lewis", "Harris", "Clarke", "Patel", "Jackson", "Wood",
+        "Turner", "Martin", "Cooper", "Hill", "Ward", "Morris", "Moore", "Clark", "Lee", "King",
         "Baker", "Harrison", "Morgan", "Allen",
     ];
 
@@ -52,16 +50,15 @@ pub mod gen {
     // ── Internet ─────────────────────────────────────────────────────────────
 
     static WORDS: &[&str] = &[
-        "alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf",
-        "hotel", "india", "juliet", "kilo", "lima", "mike", "november",
-        "oscar", "papa", "quebec", "romeo", "sierra", "tango", "uniform",
-        "victor", "whiskey", "xray", "yankee", "zulu", "rust", "cargo",
+        "alpha", "bravo", "charlie", "delta", "echo", "foxtrot", "golf", "hotel", "india",
+        "juliet", "kilo", "lima", "mike", "november", "oscar", "papa", "quebec", "romeo", "sierra",
+        "tango", "uniform", "victor", "whiskey", "xray", "yankee", "zulu", "rust", "cargo",
         "ferris", "crab", "oxide", "async", "trait", "enum", "struct",
     ];
 
     static DOMAINS: &[&str] = &[
-        "example", "test", "demo", "sample", "fake", "mock", "dev",
-        "acme", "globex", "initech", "umbrella", "soylent",
+        "example", "test", "demo", "sample", "fake", "mock", "dev", "acme", "globex", "initech",
+        "umbrella", "soylent",
     ];
 
     static TLDS: &[&str] = &["com", "net", "org", "io", "dev", "co"];
@@ -100,7 +97,13 @@ pub mod gen {
 
     pub fn ipv4() -> String {
         with_rng(|r| {
-            format!("{}.{}.{}.{}", r.gen::<u8>(), r.gen::<u8>(), r.gen::<u8>(), r.gen::<u8>())
+            format!(
+                "{}.{}.{}.{}",
+                r.gen::<u8>(),
+                r.gen::<u8>(),
+                r.gen::<u8>(),
+                r.gen::<u8>()
+            )
         })
     }
 
@@ -108,8 +111,14 @@ pub mod gen {
         with_rng(|r| {
             format!(
                 "{:04x}:{:04x}:{:04x}:{:04x}:{:04x}:{:04x}:{:04x}:{:04x}",
-                r.gen::<u16>(), r.gen::<u16>(), r.gen::<u16>(), r.gen::<u16>(),
-                r.gen::<u16>(), r.gen::<u16>(), r.gen::<u16>(), r.gen::<u16>(),
+                r.gen::<u16>(),
+                r.gen::<u16>(),
+                r.gen::<u16>(),
+                r.gen::<u16>(),
+                r.gen::<u16>(),
+                r.gen::<u16>(),
+                r.gen::<u16>(),
+                r.gen::<u16>(),
             )
         })
     }
@@ -127,8 +136,22 @@ pub mod gen {
             format!(
                 "{:02x}{:02x}{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}-{:02x}{:02x}-\
                  {:02x}{:02x}{:02x}{:02x}{:02x}{:02x}",
-                b[0], b[1], b[2], b[3], b[4], b[5], b[6], b[7],
-                b[8], b[9], b[10], b[11], b[12], b[13], b[14], b[15],
+                b[0],
+                b[1],
+                b[2],
+                b[3],
+                b[4],
+                b[5],
+                b[6],
+                b[7],
+                b[8],
+                b[9],
+                b[10],
+                b[11],
+                b[12],
+                b[13],
+                b[14],
+                b[15],
             )
         })
     }
@@ -154,7 +177,11 @@ pub mod gen {
             .map(|(i, &d)| {
                 if i % 2 == 0 {
                     let v = d as u32 * 2;
-                    if v > 9 { v - 9 } else { v }
+                    if v > 9 {
+                        v - 9
+                    } else {
+                        v
+                    }
                 } else {
                     d as u32
                 }
@@ -206,41 +233,55 @@ pub mod gen {
 // ── Blanket impls for common primitives ──────────────────────────────────────
 
 impl Fake for String {
-    fn fake() -> Self { gen::word() }
+    fn fake() -> Self {
+        gen::word()
+    }
 }
 
 impl Fake for bool {
-    fn fake() -> Self { gen::range_i64(0, 1) != 0 }
+    fn fake() -> Self {
+        gen::range_i64(0, 1) != 0
+    }
 }
 
 macro_rules! impl_fake_int {
     ($t:ty, $lo:expr, $hi:expr) => {
         impl Fake for $t {
-            fn fake() -> Self { gen::range_i64($lo, $hi) as $t }
+            fn fake() -> Self {
+                gen::range_i64($lo, $hi) as $t
+            }
         }
     };
 }
 
-impl_fake_int!(u8,  0, 255);
+impl_fake_int!(u8, 0, 255);
 impl_fake_int!(u16, 0, 65535);
 impl_fake_int!(u32, 0, i32::MAX as i64);
 impl_fake_int!(u64, 0, i64::MAX);
-impl_fake_int!(i8,  -128, 127);
+impl_fake_int!(i8, -128, 127);
 impl_fake_int!(i16, -32768, 32767);
 impl_fake_int!(i32, i32::MIN as i64, i32::MAX as i64);
 impl_fake_int!(i64, i64::MIN, i64::MAX);
 impl_fake_int!(usize, 0, 1000);
 
 impl Fake for f32 {
-    fn fake() -> Self { gen::range_i64(-1000, 1000) as f32 }
+    fn fake() -> Self {
+        gen::range_i64(-1000, 1000) as f32
+    }
 }
 impl Fake for f64 {
-    fn fake() -> Self { gen::range_i64(-1000, 1000) as f64 }
+    fn fake() -> Self {
+        gen::range_i64(-1000, 1000) as f64
+    }
 }
 
 impl<T: Fake> Fake for Option<T> {
     fn fake() -> Self {
-        if gen::range_i64(0, 1) == 0 { None } else { Some(T::fake()) }
+        if gen::range_i64(0, 1) == 0 {
+            None
+        } else {
+            Some(T::fake())
+        }
     }
 }
 
@@ -266,14 +307,21 @@ mod tests {
     }
 
     fn luhn_valid(s: &str) -> bool {
-        let sum: u32 = s.chars().rev().enumerate().map(|(i, c)| {
-            let mut d = c.to_digit(10).unwrap();
-            if i % 2 == 1 {
-                d *= 2;
-                if d > 9 { d -= 9; }
-            }
-            d
-        }).sum();
+        let sum: u32 = s
+            .chars()
+            .rev()
+            .enumerate()
+            .map(|(i, c)| {
+                let mut d = c.to_digit(10).unwrap();
+                if i % 2 == 1 {
+                    d *= 2;
+                    if d > 9 {
+                        d -= 9;
+                    }
+                }
+                d
+            })
+            .sum();
         sum % 10 == 0
     }
 

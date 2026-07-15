@@ -154,7 +154,7 @@ fn run_app(
     Ok(())
 }
 
-fn size_color(bytes: u64) -> Color {
+pub(crate) fn size_color(bytes: u64) -> Color {
     if bytes >= 1_073_741_824 {
         Color::Red
     } else if bytes >= 104_857_600 {
@@ -167,10 +167,7 @@ fn size_color(bytes: u64) -> Color {
 fn draw(f: &mut ratatui::Frame, app: &mut App) {
     let chunks = Layout::default()
         .direction(Direction::Vertical)
-        .constraints([
-            Constraint::Min(5),
-            Constraint::Length(3),
-        ])
+        .constraints([Constraint::Min(5), Constraint::Length(3)])
         .split(f.area());
 
     let main_chunks = Layout::default()
@@ -184,13 +181,20 @@ fn draw(f: &mut ratatui::Frame, app: &mut App) {
         .iter()
         .enumerate()
         .map(|(i, e)| {
-            let selected_marker = if app.selected.contains(&i) { "✓ " } else { "  " };
+            let selected_marker = if app.selected.contains(&i) {
+                "✓ "
+            } else {
+                "  "
+            };
             let size_str = format_size(e.size_bytes, BINARY);
             let color = size_color(e.size_bytes);
             let path_str = e.path.display().to_string();
             let line = Line::from(vec![
                 Span::styled(selected_marker, Style::default().fg(Color::Green)),
-                Span::styled(size_str, Style::default().fg(color).add_modifier(Modifier::BOLD)),
+                Span::styled(
+                    size_str,
+                    Style::default().fg(color).add_modifier(Modifier::BOLD),
+                ),
                 Span::raw("  "),
                 Span::raw(path_str),
             ]);
@@ -199,8 +203,16 @@ fn draw(f: &mut ratatui::Frame, app: &mut App) {
         .collect();
 
     let list = List::new(items)
-        .block(Block::default().borders(Borders::ALL).title(" target/ directories "))
-        .highlight_style(Style::default().bg(Color::DarkGray).add_modifier(Modifier::BOLD))
+        .block(
+            Block::default()
+                .borders(Borders::ALL)
+                .title(" target/ directories "),
+        )
+        .highlight_style(
+            Style::default()
+                .bg(Color::DarkGray)
+                .add_modifier(Modifier::BOLD),
+        )
         .highlight_symbol("▶ ");
 
     f.render_stateful_widget(list, main_chunks[0], &mut app.list_state);
@@ -213,7 +225,11 @@ fn draw(f: &mut ratatui::Frame, app: &mut App) {
             e.path.display(),
             format_size(e.size_bytes, BINARY),
             e.last_modified,
-            if app.selected.contains(&i) { "yes" } else { "no" }
+            if app.selected.contains(&i) {
+                "yes"
+            } else {
+                "no"
+            }
         )
     } else {
         "No entries found.".to_string()
@@ -226,7 +242,11 @@ fn draw(f: &mut ratatui::Frame, app: &mut App) {
 
     // ── Bottom bar: status + keybindings ─────────────────────────────────
     let total: u64 = app.entries.iter().map(|e| e.size_bytes).sum();
-    let selected_size: u64 = app.selected.iter().map(|i| app.entries[*i].size_bytes).sum();
+    let selected_size: u64 = app
+        .selected
+        .iter()
+        .map(|i| app.entries[*i].size_bytes)
+        .sum();
     let status = if app.status.is_empty() {
         format!(
             " Total: {}  |  Selected: {} ({})  |  [space] toggle  [a] all  [d] delete  [q] quit",
@@ -242,4 +262,126 @@ fn draw(f: &mut ratatui::Frame, app: &mut App) {
         .block(Block::default().borders(Borders::ALL))
         .style(Style::default().fg(Color::Cyan));
     f.render_widget(status_bar, chunks[1]);
+}
+
+#[cfg(test)]
+mod tests {
+    use super::{size_color, App};
+    use crate::scan::TargetEntry;
+    use ratatui::style::Color;
+    use std::path::PathBuf;
+
+    fn fake_entry(size: u64) -> TargetEntry {
+        TargetEntry {
+            path: PathBuf::from("/fake/target"),
+            size_bytes: size,
+            last_modified: "1970-01-01T00:00:00Z".to_string(),
+        }
+    }
+
+    // ── size_color ────────────────────────────────────────────────────────────
+
+    #[test]
+    fn small_is_green() {
+        assert_eq!(size_color(0), Color::Green);
+        assert_eq!(size_color(104_857_599), Color::Green);
+    }
+
+    #[test]
+    fn medium_is_yellow() {
+        assert_eq!(size_color(104_857_600), Color::Yellow);
+        assert_eq!(size_color(1_073_741_823), Color::Yellow);
+    }
+
+    #[test]
+    fn large_is_red() {
+        assert_eq!(size_color(1_073_741_824), Color::Red);
+        assert_eq!(size_color(u64::MAX), Color::Red);
+    }
+
+    // ── App construction ──────────────────────────────────────────────────────
+
+    #[test]
+    fn new_selects_first_entry() {
+        let app = App::new(vec![fake_entry(1), fake_entry(2)], false);
+        assert_eq!(app.current_index(), Some(0));
+    }
+
+    #[test]
+    fn new_empty_no_selection() {
+        let app = App::new(vec![], false);
+        assert_eq!(app.current_index(), None);
+    }
+
+    // ── Navigation ────────────────────────────────────────────────────────────
+
+    #[test]
+    fn move_down_advances_cursor() {
+        let mut app = App::new(vec![fake_entry(1), fake_entry(2)], false);
+        app.move_down();
+        assert_eq!(app.current_index(), Some(1));
+    }
+
+    #[test]
+    fn move_down_clamps_at_last() {
+        let mut app = App::new(vec![fake_entry(1), fake_entry(2)], false);
+        app.move_down();
+        app.move_down();
+        assert_eq!(app.current_index(), Some(1));
+    }
+
+    #[test]
+    fn move_up_clamps_at_first() {
+        let mut app = App::new(vec![fake_entry(1), fake_entry(2)], false);
+        app.move_up();
+        assert_eq!(app.current_index(), Some(0));
+    }
+
+    // ── Selection ────────────────────────────────────────────────────────────
+
+    #[test]
+    fn toggle_selected_adds_and_removes() {
+        let mut app = App::new(vec![fake_entry(1)], false);
+        app.toggle_selected();
+        assert!(app.selected.contains(&0));
+        app.toggle_selected();
+        assert!(!app.selected.contains(&0));
+    }
+
+    #[test]
+    fn select_all_fills_then_clears() {
+        let mut app = App::new(vec![fake_entry(1), fake_entry(2)], false);
+        app.select_all();
+        assert_eq!(app.selected.len(), 2);
+        app.select_all();
+        assert_eq!(app.selected.len(), 0);
+    }
+
+    // ── delete_selected (dry-run) ─────────────────────────────────────────────
+
+    #[test]
+    fn delete_selected_dry_run_removes_entries() {
+        let mut app = App::new(vec![fake_entry(100), fake_entry(200)], true);
+        app.select_all();
+        app.delete_selected();
+        assert!(app.entries.is_empty());
+        assert!(app.selected.is_empty());
+        assert!(!app.status.is_empty());
+    }
+
+    #[test]
+    fn delete_selected_dry_run_plural_status() {
+        let mut app = App::new(vec![fake_entry(1), fake_entry(2)], true);
+        app.select_all();
+        app.delete_selected();
+        assert!(app.status.contains("directories"));
+    }
+
+    #[test]
+    fn delete_selected_dry_run_singular_status() {
+        let mut app = App::new(vec![fake_entry(1), fake_entry(2)], true);
+        app.toggle_selected(); // select only index 0
+        app.delete_selected();
+        assert!(app.status.contains("directory"));
+    }
 }

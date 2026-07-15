@@ -2,10 +2,8 @@ use proc_macro::TokenStream;
 use proc_macro2::Span;
 use quote::quote;
 use syn::{
-    parse_macro_input,
-    punctuated::Punctuated,
-    token::Comma,
-    Expr, ExprLit, ItemFn, Lit, MetaNameValue,
+    parse_macro_input, punctuated::Punctuated, token::Comma, Expr, ExprLit, ItemFn, Lit,
+    MetaNameValue,
 };
 
 /// Attribute macro that wraps a test function in a scoped env mock.
@@ -23,13 +21,12 @@ pub fn tpt_env(args: TokenStream, item: TokenStream) -> TokenStream {
     let func = parse_macro_input!(item as ItemFn);
 
     // Parse args as comma-separated `KEY = "value"` pairs.
-    let pairs = match syn::parse::Parser::parse(
-        Punctuated::<MetaNameValue, Comma>::parse_terminated,
-        args,
-    ) {
-        Ok(p) => p,
-        Err(e) => return e.to_compile_error().into(),
-    };
+    let pairs =
+        match syn::parse::Parser::parse(Punctuated::<MetaNameValue, Comma>::parse_terminated, args)
+        {
+            Ok(p) => p,
+            Err(e) => return e.to_compile_error().into(),
+        };
 
     let mut set_calls = vec![];
 
@@ -37,13 +34,18 @@ pub fn tpt_env(args: TokenStream, item: TokenStream) -> TokenStream {
         let key = match nv.path.get_ident() {
             Some(i) => i.to_string(),
             None => {
-                return syn::Error::new_spanned(&nv.path, "expected a simple identifier for env var key")
-                    .to_compile_error()
-                    .into();
+                return syn::Error::new_spanned(
+                    &nv.path,
+                    "expected a simple identifier for env var key",
+                )
+                .to_compile_error()
+                .into();
             }
         };
         let val = match &nv.value {
-            Expr::Lit(ExprLit { lit: Lit::Str(s), .. }) => s.value(),
+            Expr::Lit(ExprLit {
+                lit: Lit::Str(s), ..
+            }) => s.value(),
             other => {
                 return syn::Error::new_spanned(other, "tpt_env values must be string literals")
                     .to_compile_error()

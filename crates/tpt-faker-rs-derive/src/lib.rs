@@ -2,10 +2,8 @@ use proc_macro::TokenStream;
 use proc_macro2::TokenStream as TS2;
 use quote::quote;
 use syn::{
-    parse_macro_input,
-    punctuated::Punctuated,
-    token::Comma,
-    Data, DeriveInput, Expr, ExprLit, Fields, Lit, MetaNameValue,
+    parse_macro_input, punctuated::Punctuated, token::Comma, Data, DeriveInput, Expr, ExprLit,
+    Fields, Lit, MetaNameValue,
 };
 
 /// Derive the `Fake` trait for a struct.
@@ -82,17 +80,22 @@ fn field_generator(f: &syn::Field) -> TS2 {
             continue;
         }
         // Parse inner tokens as `key = "value"` pairs.
-        let pairs: Punctuated<MetaNameValue, Comma> = match attr
-            .parse_args_with(Punctuated::<MetaNameValue, Comma>::parse_terminated)
-        {
-            Ok(p) => p,
-            Err(e) => return e.to_compile_error(),
-        };
+        let pairs: Punctuated<MetaNameValue, Comma> =
+            match attr.parse_args_with(Punctuated::<MetaNameValue, Comma>::parse_terminated) {
+                Ok(p) => p,
+                Err(e) => return e.to_compile_error(),
+            };
 
         for nv in &pairs {
-            let key = nv.path.get_ident().map(|i| i.to_string()).unwrap_or_default();
+            let key = nv
+                .path
+                .get_ident()
+                .map(|i| i.to_string())
+                .unwrap_or_default();
             let val = match &nv.value {
-                Expr::Lit(ExprLit { lit: Lit::Str(s), .. }) => s.value(),
+                Expr::Lit(ExprLit {
+                    lit: Lit::Str(s), ..
+                }) => s.value(),
                 _ => continue,
             };
             match key.as_str() {
@@ -107,21 +110,21 @@ fn field_generator(f: &syn::Field) -> TS2 {
 
 fn kind_generator(kind: &str) -> TS2 {
     match kind {
-        "name"         => quote! { gen::name() },
-        "first_name"   => quote! { gen::first_name() },
-        "last_name"    => quote! { gen::last_name() },
-        "email"        => quote! { gen::email() },
-        "username"     => quote! { gen::username() },
-        "url"          => quote! { gen::url() },
-        "ipv4"         => quote! { gen::ipv4() },
-        "ipv6"         => quote! { gen::ipv6() },
-        "uuid"         => quote! { gen::uuid() },
-        "luhn_card"    => quote! { gen::luhn_card() },
-        "iso_date"     => quote! { gen::iso_date() },
+        "name" => quote! { gen::name() },
+        "first_name" => quote! { gen::first_name() },
+        "last_name" => quote! { gen::last_name() },
+        "email" => quote! { gen::email() },
+        "username" => quote! { gen::username() },
+        "url" => quote! { gen::url() },
+        "ipv4" => quote! { gen::ipv4() },
+        "ipv6" => quote! { gen::ipv6() },
+        "uuid" => quote! { gen::uuid() },
+        "luhn_card" => quote! { gen::luhn_card() },
+        "iso_date" => quote! { gen::iso_date() },
         "iso_datetime" => quote! { gen::iso_datetime() },
-        "word"         => quote! { gen::word() },
-        "sentence"     => quote! { gen::sentence() },
-        "paragraph"    => quote! { gen::paragraph() },
+        "word" => quote! { gen::word() },
+        "sentence" => quote! { gen::sentence() },
+        "paragraph" => quote! { gen::paragraph() },
         other => {
             let msg = format!("unknown fake kind: `{other}`");
             quote! { compile_error!(#msg) }
@@ -148,18 +151,18 @@ fn default_generator(ty: &syn::Type) -> TS2 {
     let ty_str = quote!(#ty).to_string().replace(' ', "");
     match ty_str.as_str() {
         "String" => quote! { gen::word() },
-        "bool"   => quote! { gen::range_i64(0, 1) != 0 },
-        "u8"     => quote! { gen::range_i64(0, 255) as u8 },
-        "u16"    => quote! { gen::range_i64(0, 65535) as u16 },
-        "u32"    => quote! { gen::range_i64(0, i32::MAX as i64) as u32 },
-        "u64"    => quote! { gen::range_i64(0, i64::MAX) as u64 },
-        "i8"     => quote! { gen::range_i64(-128, 127) as i8 },
-        "i16"    => quote! { gen::range_i64(-32768, 32767) as i16 },
-        "i32"    => quote! { gen::range_i64(i32::MIN as i64, i32::MAX as i64) as i32 },
-        "i64"    => quote! { gen::range_i64(i64::MIN, i64::MAX) },
-        "f32"    => quote! { gen::range_i64(-1000, 1000) as f32 },
-        "f64"    => quote! { gen::range_i64(-1000, 1000) as f64 },
-        "usize"  => quote! { gen::range_i64(0, 1000) as usize },
-        _        => quote! { ::std::default::Default::default() },
+        "bool" => quote! { gen::range_i64(0, 1) != 0 },
+        "u8" => quote! { gen::range_i64(0, 255) as u8 },
+        "u16" => quote! { gen::range_i64(0, 65535) as u16 },
+        "u32" => quote! { gen::range_i64(0, i32::MAX as i64) as u32 },
+        "u64" => quote! { gen::range_i64(0, i64::MAX) as u64 },
+        "i8" => quote! { gen::range_i64(-128, 127) as i8 },
+        "i16" => quote! { gen::range_i64(-32768, 32767) as i16 },
+        "i32" => quote! { gen::range_i64(i32::MIN as i64, i32::MAX as i64) as i32 },
+        "i64" => quote! { gen::range_i64(i64::MIN, i64::MAX) },
+        "f32" => quote! { gen::range_i64(-1000, 1000) as f32 },
+        "f64" => quote! { gen::range_i64(-1000, 1000) as f64 },
+        "usize" => quote! { gen::range_i64(0, 1000) as usize },
+        _ => quote! { ::std::default::Default::default() },
     }
 }

@@ -10,6 +10,7 @@ homepage.workspace = true
 description = "Safe, isolated environment variable mocking for async tests — prevents race conditions via a global Mutex"
 keywords = ["testing", "env", "mock", "async", "test-utils"]
 categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-env-mocker"
 readme = "README.md"
 exclude = [".github"]
 

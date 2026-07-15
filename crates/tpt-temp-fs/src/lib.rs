@@ -30,7 +30,10 @@ impl TempDir {
         let suffix = unique_suffix();
         let path = base.join(format!("{prefix}{suffix}"));
         fs::create_dir_all(&path)?;
-        Ok(Self { path, persistent: false })
+        Ok(Self {
+            path,
+            persistent: false,
+        })
     }
 
     /// The root path of this temporary directory.
@@ -84,8 +87,7 @@ impl TempDir {
     /// ```
     #[cfg(feature = "scaffold")]
     pub fn scaffold_from_str(&self, s: &str) -> io::Result<()> {
-        let map = parse_scaffold(s)
-            .map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
+        let map = parse_scaffold(s).map_err(|e| io::Error::new(io::ErrorKind::InvalidData, e))?;
         for (key, value) in map {
             if key.ends_with('/') {
                 self.create_dir(&key[..key.len() - 1])?;
@@ -113,7 +115,9 @@ fn unique_suffix() -> String {
         .unwrap_or(0);
     // Mix in the thread id as a second source of uniqueness.
     let tid = format!("{:?}", std::thread::current().id());
-    let tid_hash: u64 = tid.bytes().fold(0u64, |acc, b| acc.wrapping_mul(31).wrapping_add(b as u64));
+    let tid_hash: u64 = tid
+        .bytes()
+        .fold(0u64, |acc, b| acc.wrapping_mul(31).wrapping_add(b as u64));
     format!("{nanos:08x}{tid_hash:08x}")
 }
 
@@ -213,8 +217,12 @@ mod tests {
     #[cfg(feature = "scaffold")]
     fn scaffold_from_yaml() {
         let dir = TempDir::new().unwrap();
-        dir.scaffold_from_str("config.txt: hello\nsubdir/:\n").unwrap();
-        assert_eq!(fs::read_to_string(dir.child("config.txt")).unwrap(), "hello");
+        dir.scaffold_from_str("config.txt: hello\nsubdir/:\n")
+            .unwrap();
+        assert_eq!(
+            fs::read_to_string(dir.child("config.txt")).unwrap(),
+            "hello"
+        );
         assert!(dir.child("subdir").is_dir());
     }
 
@@ -223,6 +231,9 @@ mod tests {
     fn scaffold_from_json() {
         let dir = TempDir::new().unwrap();
         dir.scaffold_from_str(r#"{"file.txt": "content"}"#).unwrap();
-        assert_eq!(fs::read_to_string(dir.child("file.txt")).unwrap(), "content");
+        assert_eq!(
+            fs::read_to_string(dir.child("file.txt")).unwrap(),
+            "content"
+        );
     }
 }
