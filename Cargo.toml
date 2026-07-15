@@ -7,9 +7,9 @@ version = "0.1.0"
 edition = "2021"
 rust-version = "1.75"
 license = "MIT OR Apache-2.0"
-repository = "https://github.com/thirtyfiveparts/tpt-dev-dx"
-authors = ["ThirtyFiveParts"]
-homepage = "https://github.com/thirtyfiveparts/tpt-dev-dx"
+repository = "https://github.com/tpt-solutions/tpt-dev-dx"
+authors = ["tpt-solutions"]
+homepage = "https://github.com/tpt-solutions/tpt-dev-dx"
 
 [workspace.dependencies]
 # proc-macro support

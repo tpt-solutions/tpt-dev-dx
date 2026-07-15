@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/tpt-temp-fs.svg)](https://crates.io/crates/tpt-temp-fs)
 [![docs.rs](https://docs.rs/tpt-temp-fs/badge.svg)](https://docs.rs/tpt-temp-fs)
-[![CI](https://github.com/thirtyfiveparts/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/thirtyfiveparts/tpt-dev-dx/actions)
+[![CI](https://github.com/tpt-solutions/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/tpt-solutions/tpt-dev-dx/actions)
 
 Ephemeral, isolated file-system fixtures for integration tests.
 

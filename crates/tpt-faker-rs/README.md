@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/tpt-faker-rs.svg)](https://crates.io/crates/tpt-faker-rs)
 [![docs.rs](https://docs.rs/tpt-faker-rs/badge.svg)](https://docs.rs/tpt-faker-rs)
-[![CI](https://github.com/thirtyfiveparts/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/thirtyfiveparts/tpt-dev-dx/actions)
+[![CI](https://github.com/tpt-solutions/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/tpt-solutions/tpt-dev-dx/actions)
 
 Strongly-typed, realistic mock data generation for Rust.
 

@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/tpt-env-mocker.svg)](https://crates.io/crates/tpt-env-mocker)
 [![docs.rs](https://docs.rs/tpt-env-mocker/badge.svg)](https://docs.rs/tpt-env-mocker)
-[![CI](https://github.com/thirtyfiveparts/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/thirtyfiveparts/tpt-dev-dx/actions)
+[![CI](https://github.com/tpt-solutions/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/tpt-solutions/tpt-dev-dx/actions)
 
 Safe, isolated environment variable mocking for async tests.
 

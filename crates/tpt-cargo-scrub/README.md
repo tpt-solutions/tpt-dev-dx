@@ -1,7 +1,7 @@
 # tpt-cargo-scrub
 
 [![crates.io](https://img.shields.io/crates/v/tpt-cargo-scrub.svg)](https://crates.io/crates/tpt-cargo-scrub)
-[![CI](https://github.com/thirtyfiveparts/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/thirtyfiveparts/tpt-dev-dx/actions)
+[![CI](https://github.com/tpt-solutions/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/tpt-solutions/tpt-dev-dx/actions)
 
 Blazing-fast CLI/TUI tool to find, analyse, and clean Rust `target/` directories across your entire machine.
 

@@ -2,7 +2,7 @@
 
 [![crates.io](https://img.shields.io/crates/v/tpt-snapshot-lite.svg)](https://crates.io/crates/tpt-snapshot-lite)
 [![docs.rs](https://docs.rs/tpt-snapshot-lite/badge.svg)](https://docs.rs/tpt-snapshot-lite)
-[![CI](https://github.com/thirtyfiveparts/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/thirtyfiveparts/tpt-dev-dx/actions)
+[![CI](https://github.com/tpt-solutions/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/tpt-solutions/tpt-dev-dx/actions)
 
 Lightweight, **zero-dependency** snapshot testing for Rust.
 
