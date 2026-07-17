@@ -41,10 +41,11 @@
 - [x] `crates/tpt-snapshot-lite/README.md`
 - [x] `crates/tpt-snapshot-lite/CHANGELOG.md`
 
-## Phase 5 — tpt-faker-rs
-- [x] `crates/tpt-faker-rs-derive/Cargo.toml` (proc-macro crate)
+## Phase 5 — out-faker-rs
+Renamed from `tpt-faker-rs` (see commit `38142c2`) and marked `publish = false` — deemed too redundant with the established `fake` crate to publish. The `out-` prefix flags any crate held back from crates.io.
+- [x] `crates/out-faker-rs-derive/Cargo.toml` (proc-macro crate)
 - [x] `#[derive(Fake)]` macro with `#[fake(...)]` field attrs
-- [x] `crates/tpt-faker-rs/Cargo.toml`
+- [x] `crates/out-faker-rs/Cargo.toml`
 - [x] `Fake` trait definition
 - [x] Generators: `name`, `first_name`, `last_name`, `email`, `username`
 - [x] Generators: `url`, `ipv4`, `ipv6`, `uuid`
@@ -54,8 +55,8 @@
 - [x] Generators: `range = "lo..=hi"` for numerics
 - [x] `serde` optional feature
 - [x] Unit tests for each generator
-- [x] `crates/tpt-faker-rs/README.md`
-- [x] `crates/tpt-faker-rs/CHANGELOG.md`
+- [x] `crates/out-faker-rs/README.md`
+- [x] `crates/out-faker-rs/CHANGELOG.md`
 
 ## Phase 6 — tpt-cargo-scrub
 - [x] `crates/tpt-cargo-scrub/Cargo.toml` (binary crate)
@@ -80,8 +81,6 @@
 - [ ] `cargo publish --dry-run` — tpt-snapshot-lite
 - [ ] `cargo publish --dry-run` — tpt-env-mocker-macros
 - [ ] `cargo publish --dry-run` — tpt-env-mocker
-- [ ] `cargo publish --dry-run` — tpt-faker-rs-derive
-- [ ] `cargo publish --dry-run` — tpt-faker-rs
 - [ ] `cargo publish --dry-run` — tpt-cargo-scrub
 - [ ] `cargo publish --dry-run` — tpt-port-scout
 - [ ] `cargo publish --dry-run` — tpt-log-tap

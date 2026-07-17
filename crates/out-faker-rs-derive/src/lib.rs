@@ -61,9 +61,9 @@ pub fn derive_fake(input: TokenStream) -> TokenStream {
     };
 
     let expanded = quote! {
-        impl ::tpt_faker_rs::Fake for #name {
+        impl ::out_faker_rs::Fake for #name {
             fn fake() -> Self {
-                use ::tpt_faker_rs::gen;
+                use ::out_faker_rs::gen;
                 Self {
                     #(#field_inits,)*
                 }

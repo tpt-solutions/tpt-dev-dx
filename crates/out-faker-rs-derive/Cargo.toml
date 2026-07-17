@@ -1,5 +1,5 @@
 [package]
-name = "tpt-faker-rs-derive"
+name = "out-faker-rs-derive"
 version.workspace = true
 edition.workspace = true
 rust-version.workspace = true
@@ -7,12 +7,13 @@ license.workspace = true
 repository.workspace = true
 authors.workspace = true
 homepage.workspace = true
-description = "Proc-macro internals for tpt-faker-rs — do not use directly"
+description = "Proc-macro internals for out-faker-rs — do not use directly"
 keywords = ["testing", "fake", "mock", "proc-macro", "derive"]
 categories = ["development-tools::testing"]
-documentation = "https://docs.rs/tpt-faker-rs-derive"
+documentation = "https://docs.rs/out-faker-rs-derive"
 readme = "README.md"
 exclude = [".github"]
+publish = false
 
 [lib]
 proc-macro = true

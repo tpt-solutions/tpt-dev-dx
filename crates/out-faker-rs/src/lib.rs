@@ -1,4 +1,4 @@
-pub use tpt_faker_rs_derive::Fake;
+pub use out_faker_rs_derive::Fake;
 
 /// The core trait implemented by types that can generate fake instances of themselves.
 pub trait Fake: Sized {

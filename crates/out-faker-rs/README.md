@@ -1,7 +1,7 @@
-# tpt-faker-rs
+# out-faker-rs
 
-[![crates.io](https://img.shields.io/crates/v/tpt-faker-rs.svg)](https://crates.io/crates/tpt-faker-rs)
-[![docs.rs](https://docs.rs/tpt-faker-rs/badge.svg)](https://docs.rs/tpt-faker-rs)
+[![crates.io](https://img.shields.io/crates/v/out-faker-rs.svg)](https://crates.io/crates/out-faker-rs)
+[![docs.rs](https://docs.rs/out-faker-rs/badge.svg)](https://docs.rs/out-faker-rs)
 [![CI](https://github.com/tpt-solutions/tpt-dev-dx/actions/workflows/ci.yml/badge.svg)](https://github.com/tpt-solutions/tpt-dev-dx/actions)
 
 Strongly-typed, realistic mock data generation for Rust.
@@ -12,11 +12,11 @@ Generates data that passes real-world constraints: Luhn-valid credit card number
 
 ```toml
 [dev-dependencies]
-tpt-faker-rs = "0.1"
+out-faker-rs = "0.1"
 ```
 
 ```rust
-use tpt_faker_rs::Fake;
+use out_faker_rs::Fake;
 
 #[derive(Fake, Debug)]
 struct User {
@@ -67,7 +67,7 @@ Use `#[fake(range = "lo..=hi")]` for bounded integers.
 ## Using generators directly
 
 ```rust
-use tpt_faker_rs::gen;
+use out_faker_rs::gen;
 
 let card = gen::luhn_card();   // "4532015112830366"
 let id = gen::uuid();          // "550e8400-e29b-41d4-a716-446655440000"
