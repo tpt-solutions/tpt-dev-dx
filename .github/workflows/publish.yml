@@ -36,16 +36,10 @@ jobs:
       - name: Publish tpt-env-mocker-macros
         run: cargo publish -p tpt-env-mocker-macros
 
-      - name: Publish tpt-faker-rs-derive
-        run: cargo publish -p tpt-faker-rs-derive
-
-      # Wait for crates.io index to propagate the proc-macro crates
+      # Wait for crates.io index to propagate tpt-env-mocker-macros
       - name: Wait for index propagation
         run: sleep 60
 
-      # Tier 2: depend on intra-workspace proc-macro crates published above
+      # Tier 2: depends on tpt-env-mocker-macros published above
       - name: Publish tpt-env-mocker
         run: cargo publish -p tpt-env-mocker
-
-      - name: Publish tpt-faker-rs
-        run: cargo publish -p tpt-faker-rs
