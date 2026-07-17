@@ -1,0 +1,19 @@
+[package]
+name = "tpt-cli-snap"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "CLI process testing with integrated snapshot assertions — bridges assert_cmd and tpt-snapshot-lite"
+keywords = ["testing", "cli", "snapshot", "assert_cmd", "test-utils"]
+categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-cli-snap"
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+assert_cmd = { workspace = true }
+tpt-snapshot-lite = { path = "../tpt-snapshot-lite", version = "0.1.0" }

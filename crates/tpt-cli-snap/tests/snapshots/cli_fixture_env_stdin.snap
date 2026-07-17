@@ -1,0 +1,2 @@
+env CLI_FIXTURE_VAR=world
+stdin: piped-input

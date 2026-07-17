@@ -1,0 +1,23 @@
+[package]
+name = "tpt-fixture-macros"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Proc-macro internals for tpt-fixture — do not use directly"
+keywords = ["testing", "fixture", "macros", "proc-macro"]
+categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-fixture-macros"
+readme = "README.md"
+exclude = [".github"]
+
+[lib]
+proc-macro = true
+
+[dependencies]
+proc-macro2 = { workspace = true }
+quote = { workspace = true }
+syn = { workspace = true }

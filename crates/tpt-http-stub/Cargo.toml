@@ -1,0 +1,20 @@
+[package]
+name = "tpt-http-stub"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Lightweight in-process HTTP stub server for tests — bind, register route stubs, assert on requests; no async runtime required"
+keywords = ["testing", "http", "mock", "stub", "test-utils"]
+categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-http-stub"
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+tpt-port-scout = { path = "../tpt-port-scout", version = "0.1.0" }
+serde = { workspace = true }
+serde_json = { workspace = true }

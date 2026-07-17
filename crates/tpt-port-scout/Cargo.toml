@@ -1,0 +1,18 @@
+[package]
+name = "tpt-port-scout"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "RAII TCP/UDP port reservation — holds sockets open until the server binds, eliminating TOCTOU races in parallel integration tests"
+keywords = ["testing", "port", "tcp", "toctou", "test-utils"]
+categories = ["development-tools::testing", "network-programming"]
+documentation = "https://docs.rs/tpt-port-scout"
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+# intentionally empty — zero runtime dependencies, pure std::net

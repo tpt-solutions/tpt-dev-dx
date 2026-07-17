@@ -38,3 +38,10 @@ humansize = "2"
 
 # error handling
 anyhow = "1"
+
+# structured logging / tracing
+tracing = "0.1"
+tracing-subscriber = { version = "0.3", features = ["fmt", "env-filter"] }
+
+# CLI process testing
+assert_cmd = "2"

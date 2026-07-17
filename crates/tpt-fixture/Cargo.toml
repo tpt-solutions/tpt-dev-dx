@@ -1,0 +1,27 @@
+[package]
+name = "tpt-fixture"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Session- and module-scoped test fixtures with async init and teardown — fills the beforeAll/afterAll gap"
+keywords = ["testing", "fixture", "setup", "teardown", "test-utils"]
+categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-fixture"
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+tpt-fixture-macros = { path = "../tpt-fixture-macros", version = "0.1.0" }
+tokio = { version = "1", features = ["rt"], optional = true }
+
+[features]
+default = []
+# Use a real tokio current-thread runtime to drive async fixture init/teardown.
+tokio = ["dep:tokio"]
+
+[dev-dependencies]
+tokio = { version = "1", features = ["rt", "macros", "time"] }

@@ -83,74 +83,80 @@
 - [ ] `cargo publish --dry-run` — tpt-faker-rs-derive
 - [ ] `cargo publish --dry-run` — tpt-faker-rs
 - [ ] `cargo publish --dry-run` — tpt-cargo-scrub
+- [ ] `cargo publish --dry-run` — tpt-port-scout
+- [ ] `cargo publish --dry-run` — tpt-log-tap
+- [ ] `cargo publish --dry-run` — tpt-cli-snap
+- [ ] `cargo publish --dry-run` — tpt-http-stub
+- [ ] `cargo publish --dry-run` — tpt-fixture-macros
+- [ ] `cargo publish --dry-run` — tpt-fixture
 - [ ] `cargo doc --workspace --no-deps` — zero warnings
 - [ ] Final `cargo test --workspace` green
 
 ## Phase 8 — tpt-port-scout
 RAII TCP/UDP port reservation — holds sockets open until the server binds, eliminating TOCTOU races in parallel integration tests.
-- [ ] `crates/tpt-port-scout/Cargo.toml` (zero deps, pure `std::net`)
-- [ ] `PortSet::reserve(n)` — bind N listeners on `127.0.0.1:0`, return guard
-- [ ] `PortSet::reserve_one()` convenience constructor
-- [ ] `PortSet::addr(i)` / `PortSet::addrs()` — expose `SocketAddr` per port
-- [ ] Hand-off: convert `TcpListener` to `std::os::unix::io::FromRawFd` for server reuse (or document the rebind-before-drop pattern)
-- [ ] `Drop` impl releases all reserved listeners
-- [ ] Unit tests (parallel port allocation, no collisions)
-- [ ] `crates/tpt-port-scout/README.md`
-- [ ] `crates/tpt-port-scout/CHANGELOG.md`
+- [x] `crates/tpt-port-scout/Cargo.toml` (zero deps, pure `std::net`)
+- [x] `PortSet::reserve(n)` — bind N listeners on `127.0.0.1:0`, return guard
+- [x] `PortSet::reserve_one()` convenience constructor
+- [x] `PortSet::addr(i)` / `PortSet::addrs()` — expose `SocketAddr` per port
+- [x] Hand-off: `PortSet::take_listener()` / `into_std_listener()` for server reuse
+- [x] `Drop` impl releases all reserved listeners
+- [x] Unit tests (parallel port allocation, no collisions) — 12 passing
+- [x] `crates/tpt-port-scout/README.md`
+- [x] `crates/tpt-port-scout/CHANGELOG.md`
 
 ## Phase 9 — tpt-log-tap
 Per-test structured tracing event capture — assert on field values, not text. RAII install/uninstall of a per-test subscriber layer.
-- [ ] `crates/tpt-log-tap/Cargo.toml` (dep: `tracing`, `tracing-subscriber`)
-- [ ] `LogTap::new()` builder (filter by level, target)
-- [ ] `LogTap::install()` → `TapGuard` (installs per-thread subscriber layer)
-- [ ] Internal event buffer storing structured fields per event
-- [ ] `TapGuard::assert_contains(level, target, fields)` — field-level match
-- [ ] `TapGuard::assert_not_contains(...)` counterpart
-- [ ] `TapGuard::events()` — raw access for custom assertions
-- [ ] `Drop` impl uninstalls the layer and checks any pending expectations
-- [ ] Tests confirming isolation across parallel async tests
-- [ ] `crates/tpt-log-tap/README.md`
-- [ ] `crates/tpt-log-tap/CHANGELOG.md`
+- [x] `crates/tpt-log-tap/Cargo.toml` (dep: `tracing`, `tracing-subscriber`)
+- [x] `LogTap::new()` builder (filter by level, target)
+- [x] `LogTap::install()` → `TapGuard` (installs per-thread subscriber layer)
+- [x] Internal event buffer storing structured fields per event
+- [x] `TapGuard::assert_contains(level, target, fields)` — field-level match
+- [x] `TapGuard::assert_not_contains(...)` counterpart
+- [x] `TapGuard::events()` — raw access for custom assertions
+- [x] `Drop` impl uninstalls the layer and checks any pending expectations
+- [x] Tests confirming isolation across parallel async tests — 9 passing
+- [x] `crates/tpt-log-tap/README.md`
+- [x] `crates/tpt-log-tap/CHANGELOG.md`
 
 ## Phase 10 — tpt-cli-snap
 CLI process testing with integrated snapshot assertions — bridges `assert_cmd` and `tpt-snapshot-lite` for readable, maintainable binary output tests.
-- [ ] `crates/tpt-cli-snap/Cargo.toml` (deps: `assert_cmd`, `tpt-snapshot-lite`)
-- [ ] `CliTest::cargo_bin(name)` / `CliTest::command(cmd)` constructors
-- [ ] `.arg()`, `.args()`, `.env()`, `.stdin()` builder methods
-- [ ] `.assert_snapshot(name)` — runs process, snapshots stdout via `tpt-snapshot-lite`
-- [ ] `.assert_snapshot_stderr(name)` — stderr variant
-- [ ] `.assert_snapshot_both(name)` — combined stdout+stderr snapshot
-- [ ] Exit code assertion chaining
-- [ ] `UPDATE_SNAPSHOTS=1` passthrough from `tpt-snapshot-lite`
-- [ ] Integration tests against a fixture binary in the workspace
-- [ ] `crates/tpt-cli-snap/README.md`
-- [ ] `crates/tpt-cli-snap/CHANGELOG.md`
+- [x] `crates/tpt-cli-snap/Cargo.toml` (deps: `assert_cmd`, `tpt-snapshot-lite`)
+- [x] `CliTest::cargo_bin(name)` / `CliTest::command(cmd)` constructors
+- [x] `.arg()`, `.args()`, `.env()`, `.stdin()` builder methods
+- [x] `.assert_snapshot(name)` — runs process, snapshots stdout via `tpt-snapshot-lite`
+- [x] `.assert_snapshot_stderr(name)` — stderr variant
+- [x] `.assert_snapshot_both(name)` — combined stdout+stderr snapshot
+- [x] Exit code assertion chaining (`assert_success` / `assert_code` / `assert_failure`)
+- [x] `UPDATE_SNAPSHOTS=1` passthrough from `tpt-snapshot-lite`
+- [x] Integration tests against `crates/cli-fixture` binary in the workspace — 6 passing
+- [x] `crates/tpt-cli-snap/README.md`
+- [x] `crates/tpt-cli-snap/CHANGELOG.md`
 
 ## Phase 11 — tpt-http-stub
 Lightweight in-process HTTP stub server — minimal deps, no async runtime required for simple request/response stubs.
-- [ ] `crates/tpt-http-stub/Cargo.toml`
-- [ ] `HttpStub::new()` — binds to a random free port (uses tpt-port-scout internally)
-- [ ] `.on(method, path).respond(status, body)` stub registration
-- [ ] `.on(...).respond_json(status, value)` convenience for JSON bodies
-- [ ] Request capture: `.last_request()`, `.requests()` for assertion
-- [ ] `.assert_called_once()` / `.assert_called_n(n)` call-count assertions
-- [ ] `Drop` impl verifies all expectations and shuts down the server
-- [ ] `base_url()` method returning a `String` for client configuration
-- [ ] Tests: parallel stubs don't interfere, missing stub returns 500
-- [ ] `crates/tpt-http-stub/README.md`
-- [ ] `crates/tpt-http-stub/CHANGELOG.md`
+- [x] `crates/tpt-http-stub/Cargo.toml`
+- [x] `HttpStub::new()` — binds to a random free port (uses tpt-port-scout internally)
+- [x] `.on(method, path).respond(status, body)` stub registration
+- [x] `.on(...).respond_json(status, value)` convenience for JSON bodies
+- [x] Request capture: `.last_request()`, `.requests()` for assertion
+- [x] `.assert_called_once()` / `.assert_called_n(n)` call-count assertions
+- [x] `Drop` impl verifies all expectations and shuts down the server
+- [x] `base_url()` method returning a `String` for client configuration
+- [x] Tests: parallel stubs don't interfere, missing stub returns 500 — 9 passing
+- [x] `crates/tpt-http-stub/README.md`
+- [x] `crates/tpt-http-stub/CHANGELOG.md`
 
 ## Phase 12 — tpt-fixture
 Session- and module-scoped test fixtures with async init and async teardown — fills the `beforeAll`/`afterAll` gap (rstest #119).
-- [ ] `crates/tpt-fixture/Cargo.toml` (proc-macro companion crate + library)
-- [ ] `crates/tpt-fixture-macros/Cargo.toml` (proc-macro crate)
-- [ ] `#[tpt_fixture(scope = "suite" | "module" | "test")]` attribute macro
-- [ ] Async init function support (returns `(Resource, impl AsyncDrop)`)
-- [ ] Suite-scope: shared across all tests in a binary, cleaned up at process exit
-- [ ] Module-scope: shared across tests in one module
-- [ ] Thread-safe sharing via `Arc<T>` injection into test functions
+- [x] `crates/tpt-fixture/Cargo.toml` (proc-macro companion crate + library)
+- [x] `crates/tpt-fixture-macros/Cargo.toml` (proc-macro crate)
+- [x] `#[tpt_fixture(scope = "suite" | "module" | "test")]` attribute macro
+- [x] Async init function support (returns `(Resource, impl AsyncDrop)`)
+- [x] Suite-scope: shared across all tests in a binary, cleaned up at process exit
+- [x] Module-scope: shared across tests in one module
+- [x] Thread-safe sharing via `Arc<T>` injection into test functions
 - [ ] nextest compatibility — document process-per-test implications
-- [ ] Async teardown workaround (spawn a teardown runtime in `Drop` if needed)
-- [ ] Tests: fixture initialised once, shared reference correct, teardown fires
-- [ ] `crates/tpt-fixture/README.md`
-- [ ] `crates/tpt-fixture/CHANGELOG.md`
+- [x] Async teardown workaround — `block_on` (tokio feature) now detects an already-running runtime via `Handle::try_current()` and drives the future on a dedicated thread/runtime instead of nesting, fixing the "Cannot start a runtime from within a runtime" panic when a fixture is used from `#[tokio::test]`
+- [x] Tests: fixture initialised once, shared reference correct, teardown fires — all 7 integration tests pass (including `async_fixture_test` and `verify_teardown_fires_on_shutdown`)
+- [x] `crates/tpt-fixture/README.md`
+- [x] `crates/tpt-fixture/CHANGELOG.md`

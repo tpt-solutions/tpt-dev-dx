@@ -1,0 +1,19 @@
+[package]
+name = "tpt-log-tap"
+version.workspace = true
+edition.workspace = true
+rust-version.workspace = true
+license.workspace = true
+repository.workspace = true
+authors.workspace = true
+homepage.workspace = true
+description = "Per-test structured tracing capture — assert on event field values, not text. RAII install/uninstall of a per-thread subscriber"
+keywords = ["testing", "tracing", "logging", "assert", "test-utils"]
+categories = ["development-tools::testing"]
+documentation = "https://docs.rs/tpt-log-tap"
+readme = "README.md"
+exclude = [".github"]
+
+[dependencies]
+tracing = { workspace = true }
+tracing-subscriber = { workspace = true }
