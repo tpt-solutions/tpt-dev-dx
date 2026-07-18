@@ -75,21 +75,22 @@ Renamed from `tpt-faker-rs` (see commit `38142c2`) and marked `publish = false` 
 - [x] `crates/tpt-cargo-scrub/CHANGELOG.md`
 
 ## Phase 7 — Crates.io Release Prep
-- [ ] Set real GitHub repository URL in workspace Cargo.toml
-- [ ] Verify all Cargo.toml metadata (description, keywords, categories, repository, readme)
-- [ ] `cargo publish --dry-run` — tpt-temp-fs
-- [ ] `cargo publish --dry-run` — tpt-snapshot-lite
-- [ ] `cargo publish --dry-run` — tpt-env-mocker-macros
-- [ ] `cargo publish --dry-run` — tpt-env-mocker
-- [ ] `cargo publish --dry-run` — tpt-cargo-scrub
-- [ ] `cargo publish --dry-run` — tpt-port-scout
-- [ ] `cargo publish --dry-run` — tpt-log-tap
-- [ ] `cargo publish --dry-run` — tpt-cli-snap
-- [ ] `cargo publish --dry-run` — tpt-http-stub
-- [ ] `cargo publish --dry-run` — tpt-fixture-macros
-- [ ] `cargo publish --dry-run` — tpt-fixture
-- [ ] `cargo doc --workspace --no-deps` — zero warnings
-- [ ] Final `cargo test --workspace` green
+- [x] Set real GitHub repository URL in workspace Cargo.toml
+- [x] Verify all Cargo.toml metadata (description, keywords, categories, repository, readme)
+- [x] `cargo publish --dry-run` — tpt-temp-fs
+- [x] `cargo publish --dry-run` — tpt-snapshot-lite
+- [x] `cargo publish --dry-run` — tpt-env-mocker-macros
+- [x] `cargo publish --dry-run` — tpt-env-mocker (verified via package/verify; full dry-run needs tier-1 crates live on the index first)
+- [x] `cargo publish --dry-run` — tpt-cargo-scrub
+- [x] `cargo publish --dry-run` — tpt-port-scout
+- [x] `cargo publish --dry-run` — tpt-log-tap
+- [x] `cargo publish --dry-run` — tpt-cli-snap (same caveat as tpt-env-mocker)
+- [x] `cargo publish --dry-run` — tpt-http-stub (same caveat)
+- [x] `cargo publish --dry-run` — tpt-fixture-macros
+- [x] `cargo publish --dry-run` — tpt-fixture (same caveat; fixed a `tpt-fixture` default-feature compile bug — `noop_waker` referenced `Waker`/`RawWaker`/`RawWakerVTable` without importing them at module scope, breaking `cargo build -p tpt-fixture` with no features)
+- [x] `cargo doc --workspace --no-deps` — zero warnings
+- [x] Final `cargo test --workspace` green
+- [x] Wired `tpt-port-scout`, `tpt-log-tap`, `tpt-fixture-macros`, `tpt-env-mocker`, `tpt-cli-snap`, `tpt-http-stub`, `tpt-fixture` into `.github/workflows/publish.yml` (previously only had the first 5 crates)
 
 ## Phase 8 — tpt-port-scout
 RAII TCP/UDP port reservation — holds sockets open until the server binds, eliminating TOCTOU races in parallel integration tests.

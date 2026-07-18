@@ -1,7 +1,7 @@
 //! Lightweight in-process HTTP stub server for tests.
 //!
 //! `tpt-http-stub` spins up a real TCP HTTP server on a random free port (reserved
-//! via [`tpt-port-scout`], so there are no TOCTOU races) and answers registered
+//! via `tpt-port-scout`, so there are no TOCTOU races) and answers registered
 //! route stubs. It uses a blocking, single-thread-per-connection server — **no
 //! async runtime required** — which makes it ideal for synchronous tests.
 //!

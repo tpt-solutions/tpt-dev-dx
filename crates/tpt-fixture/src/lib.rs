@@ -1,6 +1,6 @@
 //! Session- and module-scoped test fixtures with async init and teardown.
 //!
-//! `tpt-fixture` fills the `beforeAll` / `afterAll` gap that [`rstest`] issue
+//! `tpt-fixture` fills the `beforeAll` / `afterAll` gap that `rstest` issue
 //! #119 leaves open: it lets an init function run **once** per test scope and
 //! share its resource (as a thread-safe [`Arc<T>`](std::sync::Arc)) across every
 //! test in that scope, tearing it down when the scope ends.
@@ -238,7 +238,7 @@ where
 #[cfg(not(feature = "tokio"))]
 pub fn block_on<F: Future>(future: F) -> F::Output {
     use std::pin::Pin;
-    use std::task::{Context, Poll, RawWaker, RawWakerVTable, Waker};
+    use std::task::{Context, Poll};
 
     let mut future = future;
     // Pin to the stack; `future` is not moved after this point.
@@ -254,7 +254,9 @@ pub fn block_on<F: Future>(future: F) -> F::Output {
 }
 
 #[cfg(not(feature = "tokio"))]
-fn noop_waker() -> Waker {
+fn noop_waker() -> std::task::Waker {
+    use std::task::{RawWaker, RawWakerVTable, Waker};
+
     fn noop(_: *const ()) {}
     fn clone(_: *const ()) -> RawWaker {
         noop_raw_waker()

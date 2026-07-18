@@ -36,10 +36,28 @@ jobs:
       - name: Publish tpt-env-mocker-macros
         run: cargo publish -p tpt-env-mocker-macros
 
-      # Wait for crates.io index to propagate tpt-env-mocker-macros
+      - name: Publish tpt-port-scout
+        run: cargo publish -p tpt-port-scout
+
+      - name: Publish tpt-log-tap
+        run: cargo publish -p tpt-log-tap
+
+      - name: Publish tpt-fixture-macros
+        run: cargo publish -p tpt-fixture-macros
+
+      # Wait for crates.io index to propagate tier 1 crates
       - name: Wait for index propagation
         run: sleep 60
 
-      # Tier 2: depends on tpt-env-mocker-macros published above
+      # Tier 2: depend on a tier 1 crate published above
       - name: Publish tpt-env-mocker
         run: cargo publish -p tpt-env-mocker
+
+      - name: Publish tpt-cli-snap
+        run: cargo publish -p tpt-cli-snap
+
+      - name: Publish tpt-http-stub
+        run: cargo publish -p tpt-http-stub
+
+      - name: Publish tpt-fixture
+        run: cargo publish -p tpt-fixture
