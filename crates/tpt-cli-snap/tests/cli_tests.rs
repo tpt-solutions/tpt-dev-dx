@@ -1,34 +1,24 @@
 //! Integration tests for `tpt-cli-snap`.
 //!
 //! The fixture binary `cli-fixture` lives in a separate workspace crate (it
-//! can't reuse this crate's `CARGO_BIN_EXE_*` env var), so we resolve its built
-//! binary via [`fixture_cmd`] and wrap it with [`CliTest::command`].
+//! can't reuse this crate's `CARGO_BIN_EXE_*` env var, and nothing in the
+//! dependency graph otherwise guarantees Cargo builds it before these tests
+//! run), so we build and resolve it on demand via `escargot` in
+//! [`fixture_cmd`] and wrap it with [`CliTest::command`].
 
 use assert_cmd::Command;
 use tpt_cli_snap::CliTest;
 
-/// Locate the workspace fixture binary `cli-fixture` without relying on
-/// `CARGO_BIN_EXE_*` (which cargo only sets for the crate that builds a binary).
-///
-/// The fixture is built as a separate workspace crate; its binary lands next to
-/// this integration-test executable in `target/<profile>/cli-fixture[.exe]`.
+/// Build (if needed) and locate the workspace fixture binary `cli-fixture`.
 fn fixture_cmd() -> Command {
-    let exe = std::env::current_exe().expect("current test exe path");
-    let bin_dir = exe
-        .parent()
-        .and_then(|p| p.parent())
-        .expect("target/<profile> dir")
-        .to_path_buf();
-    let mut path = bin_dir.join("cli-fixture");
-    if !path.exists() {
-        path.set_extension(std::env::consts::EXE_EXTENSION);
-    }
-    assert!(
-        path.exists(),
-        "fixture binary not found at {}",
-        path.display()
-    );
-    Command::new(path)
+    let run = escargot::CargoBuild::new()
+        .package("cli-fixture")
+        .bin("cli-fixture")
+        .current_release()
+        .current_target()
+        .run()
+        .expect("failed to build cli-fixture fixture binary");
+    Command::from_std(run.command())
 }
 
 #[test]

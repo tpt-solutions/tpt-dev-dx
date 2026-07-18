@@ -17,3 +17,6 @@ exclude = [".github"]
 [dependencies]
 assert_cmd = { workspace = true }
 tpt-snapshot-lite = { path = "../tpt-snapshot-lite", version = "0.1.0" }
+
+[dev-dependencies]
+escargot = { workspace = true }

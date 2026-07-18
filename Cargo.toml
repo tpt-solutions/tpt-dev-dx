@@ -45,3 +45,4 @@ tracing-subscriber = { version = "0.3", features = ["fmt", "env-filter"] }
 
 # CLI process testing
 assert_cmd = "2"
+escargot = "0.5"
