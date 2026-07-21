@@ -81,8 +81,10 @@ async fn async_fixture_test(async_res: Arc<u64>) {
 
 #[tpt_fixture]
 #[test]
-fn verify_shared_reference_is_the_same_instance() {
-    // Both earlier suite tests must have shared the exact same Arc instance.
+fn verify_shared_reference_is_the_same_instance(db: Arc<String>) {
+    assert_eq!(db.as_str(), "shared-db");
+    // All suite tests share the same singleton — init must have fired exactly once
+    // regardless of which test happened to run first.
     assert_eq!(
         DB_INITS.load(Ordering::SeqCst),
         1,
